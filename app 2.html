@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AimLock Free Fire - Ultimate Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            touch-action: manipulation;
+            transform: translateZ(0);
+            font-family: 'Orbitron', monospace;
+            background: #000;
+        }
+
+        /* 🔥 ULTIMATE BACKGROUND SYSTEM 🔥 */
+        .bg-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Layer 1: Animated Grid */
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Layer 2: Floating Hexagons */
+        .hex-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,0,255,0.08) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(0,245,255,0.08) 2px, transparent 2px);
+            background-size: 100px 100px;
+            animation: hexFloat 25s ease-in-out infinite;
+        }
+
+        @keyframes hexFloat {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        /* Layer 3: Neon Ring */
+        .ring-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0,255,136,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,0,255,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0,245,255,0.1) 0%, transparent 50%);
+            animation: ringPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes ringPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        /* Layer 4: Matrix Rain */
+        .matrix-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(90deg, transparent 98%, rgba(0,255,0,0.03) 100%);
+            animation: matrixRain 8s linear infinite;
+        }
+
+        @keyframes matrixRain {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* Particles - Optimized */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00f5ff80, transparent);
+            will-change: transform;
+            box-shadow: 0 0 10px rgba(0,245,255,0.6);
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        /* Floating Orbs */
+        .orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+
+        .orb:nth-child(1) { 
+            width: 80px; height: 80px; 
+            background: radial-gradient(circle, #ff00ff80, transparent);
+            top: 20%; left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) { 
+            width: 120px; height: 120px; 
+            background: radial-gradient(circle, #00f5ff80, transparent);
+            top: 60%; right: 15%;
+            animation-delay: -4s;
+        }
+
+        .orb:nth-child(3) { 
+            width: 60px; height: 60px; 
+            background: radial-gradient(circle, #00ff8880, transparent);
+            bottom: 20%; left: 20%;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: scale(1) translateY(0px); }
+            50% { transform: scale(1.2) translateY(-30px); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 20;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            padding-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logo {
+            font-size: clamp(2.4rem, 9vw, 4.2rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #00f5ff, #ff00ff, #00ff88, #fff, #00f5ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: logoRainbow 3s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(0,245,255,0.8),
+                0 0 40px rgba(255,0,255,0.4);
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .logo::before {
+            content: '●';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00f5ff;
+            font-size: 1.5rem;
+            animation: pulseDot 2s infinite;
+            filter: drop-shadow(0 0 10px #00f5ff);
+        }
+
+        @keyframes logoRainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.5); opacity: 0.7; }
+        }
+
+        .subtitle {
+            color: #00f5ff;
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
+            font-weight: 700;
+            animation: subtitleGlow 2s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(0,245,255,0.7);
+        }
+
+        @keyframes subtitleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px #00f5ff); }
+            50% { filter: drop-shadow(0 0 20px #00f5ff); }
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 450px;
+            margin: 25px 0;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,245,255,0.4);
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(0,245,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .feature-card:hover::before,
+        .feature-card.active::before {
+            animation: shineEffect 1s infinite;
+            opacity: 1;
+        }
+
+        @keyframes shineEffect {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            border-color: #00f5ff;
+            box-shadow: 
+                0 20px 40px rgba(0,245,255,0.3),
+                0 0 30px rgba(0,245,255,0.2);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 12px;
+            background: conic-gradient(#00f5ff, #ff00ff, #00ff88, #00f5ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 10px 30px rgba(0,245,255,0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon::after {
+            width: 100px;
+            height: 100px;
+        }
+
+        .feature-title {
+            color: #fff;
+            font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .feature-desc {
+            color: rgba(255,255,255,0.85);
+            font-size: clamp(0.7rem, 2.8vw, 0.85rem);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Ultimate Button */
+        .toggle-btn {
+            background: conic-gradient(from 0deg, #00f5ff, #ff00ff, #00ff88, #fff, #00f5ff);
+            background-size: 400% 400%;
+            border: none;
+            padding: 18px 40px;
+            font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+            font-weight: 900;
+            color: #000;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 20px 40px rgba(0,245,255,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.4);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', monospace;
+            min-width: 240px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .toggle-btn:hover::before {
+            left: 100%;
+        }
+
+        .toggle-btn:hover {
+            animation: buttonPulse 2s infinite;
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0,245,255,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        /* Status */
+        .status {
+            margin-top: 20px;
+            padding: 16px 30px;
+            background: linear-gradient(145deg, rgba(0,0,0,0.8), rgba(0,245,255,0.1));
+            backdrop-filter: blur(25px);
+            border: 2px solid;
+            border-radius: 30px;
+            color: #00ff88;
+            font-weight: 800;
+            font-size: clamp(0.95rem, 4.2vw, 1.15rem);
+            text-align: center;
+            animation: statusNeon 1.5s ease-in-out infinite alternate;
+            box-shadow: 
+                0 15px 35px rgba(0,255,136,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            border-image: linear-gradient(45deg, #00ff88, #00f5ff, #ff00ff) 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: statusShine 3s infinite;
+        }
+
+        @keyframes statusNeon {
+            from { box-shadow: 0 0 20px rgba(0,255,136,0.5); }
+            to { box-shadow: 0 0 40px rgba(0,255,136,0.9); }
+        }
+
+        @keyframes statusShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .info {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.75rem;
+            font-family: 'Roboto', sans-serif;
+            margin-top: 12px;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .features { grid-template-columns: repeat(2, 1fr); gap: 13px; }
+            .container { padding: 12px; padding-bottom: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 🔥 ULTIMATE 4-LAYER BACKGROUND 🔥 -->
+    <div class="bg-layers">
+        <div class="grid-bg"></div>
+        <div class="hex-bg"></div>
+        <div class="ring-bg"></div>
+        <div class="matrix-bg"></div>
+        <div class="particles" id="particles"></div>
+        <div class="orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">AIMLOCK</h1>
+            <p class="subtitle">FREE FIRE ULTIMATE EDITION</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">PERFECT AIM</h3>
+                <p class="feature-desc">100% Lock</p>
+            </div>
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">NO RECOIL</h3>
+                <p class="feature-desc">Zero Giật</p>
+            </div>
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">👁️</div>
+                <h3 class="feature-title">ESP WALL</h3>
+                <p class="feature-desc">Thấy Tất Cả</p>
+            </div>
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">💨</div>
+                <h3 class="feature-title">SPEED HACK</h3>
+                <p class="feature-desc">Siêu Tốc</p>
+            </div>
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">🔥</div>
+                <h3 class="feature-title">HEADSHOT</h3>
+                <p class="feature-desc">99.9% HS</p>
+            </div>
+            <div class="feature-card" onclick="toggleFeature(this)">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">ANTI BAN</h3>
+                <p class="feature-desc">Safe Forever</p>
+            </div>
+        </div>
+
+        <button class="toggle-btn" id="toggleBtn" ontouchstart="toggleAimlock()">
+            🚀 KÍCH HOẠT NGAY
+        </button>
+
+        <div class="status" id="status">⭐ ULTIMATE READY - Chạm để ON</div>
+        <div class="info">v4.0 Ultimate | Cyberpunk Edition | 120FPS</div>
+    </div>
+
+    <script>
+        // Optimized Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            container.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = p.style.height = (1.5 + Math.random() * 3) + 'px';
+                p.style.animationDuration = (5 + Math.random() * 5) + 's';
+                p.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(p);
+            }
+        }
+
+        function toggleFeature(card) {
+            card.classList.toggle('active');
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        let isActive = false;
+        const toggleBtn = document.getElementById('toggleBtn');
+        const status = document.getElementById('status');
+
+        function toggleAimlock() {
+            isActive = !isActive;
+            if (isActive) {
+                toggleBtn.innerHTML = '✅ <strong>ULTRA ACTIVE</strong>';
+                toggleBtn.style.background = 'linear-gradient(45deg, #00ff88, #00cc6a, #00ff88)';
+                status.innerHTML = '🔥 <strong>MAX POWER ON</strong> - Headshot 100%';
+                status.style.color = '#00ff88';
+                if (navigator.vibrate) navigator.vibrate([100,50,100]);
+            } else {
+                toggleBtn.innerHTML = '🚀 KÍCH HOẠT NGAY';
+                toggleBtn.style.background = 'conic-gradient(from 0deg, #00f5ff, #ff00ff, #00ff88, #fff, #00f5ff)';
+                status.innerHTML = '⭐ ULTIMATE READY - Chạm để ON';
+                status.style.color = '#00f5ff';
+                if (navigator.vibrate) navigator.vibrate(50);
+            }
+        }
+
+        // Init
+        createParticles();
+        setInterval(createParticles, 10000);
+
+        // Touch ripple
+        document.addEventListener('touchstart', (e) => {
+            const target = e.target.closest('.feature-card, .toggle-btn');
+            if (target && !target.querySelector('.ripple')) {
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.left = `${e.touches[0].clientX - target.getBoundingClientRect().left}px`;
+                ripple.style.top = `${e.touches[0].clientY - target.getBoundingClientRect().top}px`;
+                target.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 400);
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
